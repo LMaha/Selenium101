@@ -1,8 +1,8 @@
-Assignment Task:Selenium 101
+# Assignment Task:Selenium 101
 
-This project demonstrate testing of given assignments 
+## This project demonstrate testing of given assignments 
 
-Test Scenario 1:
+### Test Scenario 1:
 
 1. Open LambdaTest’s Selenium Playground from
 https://www.lambdatest.com/selenium-playground
@@ -14,12 +14,13 @@ https://www.lambdatest.com/selenium-playground
 7. Validate whether the same text message is displayed in the right-hand
 panel under the “Your Message:” section.
 
-Test Scenario 2:
+### Test Scenario 2:
 1. Open the https://www.lambdatest.com/selenium-playground page and
 click “Drag & Drop Sliders” under “Progress Bars & Sliders”.
 2. Select the slider “Default value 15” and drag the bar to make it 95 by
 validating whether the range value shows 95.
-Test Scenario 3:
+
+### Test Scenario 3:
 1. Open the https://www.lambdatest.com/selenium-playground page and
 click “Input Form Submit” under “Input Forms”.
 2. Click “Submit” without filling in any information in the form.
@@ -30,7 +31,7 @@ property.
 6. Fill all fields and click “Submit”.
 7. Once submitted, validate the success message “Thanks for contacting
 us, we will get back to you shortly.” on the screen.
-Execution
+#### Execution
 You are required to run the above test in parallel on at least 2 different
 browser/OS combinations on the LambdaTest platform (for example,
 Windows 10 Chrome latest version and macOS Catalina Safari)   
