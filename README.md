@@ -35,3 +35,6 @@ us, we will get back to you shortly.” on the screen.
 You are required to run the above test in parallel on at least 2 different
 browser/OS combinations on the LambdaTest platform (for example,
 Windows 10 Chrome latest version and macOS Catalina Safari)   
+
+## TestScenarios Class in Selenium 101 project has three test methods which demonstrate above three testing scenarios
+
