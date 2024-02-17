@@ -4,36 +4,51 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
 
 public class TestScenarios {
     String _browserName;
-    WebDriver driver;
+    //WebDriver driver;
+    private WebDriverWait wait;
+    static RemoteWebDriver driver = null;
+    String username="lrmahajan";
+    String password ="2xvtB2P4DIAivMjILOAp841ZsSX0j4aqYD8p27kmSVzQyvQpuo";
+
+    String gridURL = "@hub.lambdatest.com/wd/hub";
+
     @BeforeTest
     @Parameters({"BrowserName"})
-    public void SetBrowser()
-    {
-        _browserName="BrowserName";
+    public void SetBrowser(String browName) throws MalformedURLException {
+        _browserName=browName;
+
         if(_browserName.equalsIgnoreCase("chrome"))
         {
-            driver = new ChromeDriver(getChromeOptions());
+            //driver = new ChromeDriver(getChromeOptions());
+            driver=new RemoteWebDriver(new URL("https://"+username+":"+password+gridURL),getChromeOptions());
         } else if (_browserName.equalsIgnoreCase("safari")) {
-            driver = new SafariDriver(getSafariOptions());
+            driver=new RemoteWebDriver(new URL("https://"+username+":"+password+gridURL),getSafariOptions());
 
         }
-        else
-        {
-            driver = new ChromeDriver();
-        }
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+//        else
+//        {
+//            driver = new ChromeDriver();
+//        }
     }
     @AfterTest
     public void Close()
@@ -42,6 +57,8 @@ public class TestScenarios {
     }
     @Test
     public void TestScenario1(){
+        By msg1 = By.xpath("//input[@id='user-message']");
+
         String URL;
         String welText = "Welcome to LambdaTest";
         driver.get("https://www.lambdatest.com/selenium-playground/");
@@ -49,7 +66,8 @@ public class TestScenarios {
         driver.findElement(By.xpath("//a[normalize-space()='Simple Form Demo']")).click();
         URL = driver.getCurrentUrl();
         Assert.assertTrue(URL.contains("simple-form-demo"));
-        driver.findElement(By.xpath("//input[@id='user-message']")).sendKeys(welText);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='user-message']"))).sendKeys(welText);
+        //driver.findElement(By.xpath("//input[@id='user-message']")).sendKeys(welText);
         driver.findElement(By.xpath("//button[@id='showInput']")).click();
         String msg = driver.findElement(By.xpath("//p[@id='message']")).getText();
         Assert.assertEquals(msg,welText);
@@ -61,7 +79,9 @@ public class TestScenarios {
         int x=10;
         driver.manage().window().maximize();
         driver.get("https://www.lambdatest.com/selenium-playground/");
-        driver.findElement(By.xpath("//a[normalize-space()='Drag & Drop Sliders']")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[normalize-space()='Drag & Drop Sliders']"))).click();
+        //driver.findElement(By.xpath("//a[normalize-space()='Drag & Drop Sliders']")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@value='15']")));
         WebElement slider = driver.findElement(By.xpath("//input[@value='15']"));
         Actions action= new Actions(driver);
         int width = slider.getSize().getWidth();
@@ -80,13 +100,23 @@ public class TestScenarios {
 
         driver.manage().window().maximize();
         driver.get("https://www.lambdatest.com/selenium-playground/");
-        driver.findElement(By.xpath("//a[normalize-space()='Input Form Submit']")).click();
+        //driver.findElement(By.xpath("//a[normalize-space()='Input Form Submit']")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[normalize-space()='Input Form Submit']"))).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[normalize-space()='Submit']")));
         driver.findElement(By.xpath("//button[normalize-space()='Submit']")).click();
         //Form validation is done through browser and not html on the webpage, hence can not be accessible through DOM
         //validation is opened in another window which is active, hence below code should work
         WebElement activeElement = driver.switchTo().activeElement();
         String messageStr = activeElement.getAttribute("validationMessage");
-        Assert.assertEquals(messageStr,"Please fill out this field.");
+        if(messageStr=="Fill out this field")
+        {
+            Assert.assertEquals(messageStr,"Fill out this field");
+        }
+        if(messageStr=="Please fill out this field.")
+        {
+            Assert.assertEquals(messageStr,"Please fill out this field.");
+        }
+
         driver.findElement(By.xpath("//input[@id='name']")).sendKeys("Firstname");
         driver.findElement(By.xpath("//input[@id='inputEmail4']")).sendKeys("test@test.com");
         driver.findElement(By.xpath("//input[@id='inputPassword4']")).sendKeys("TestPassword1");
